@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dice Game - Odd or Even</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Navigation -->
+        <nav class="navbar">
+            <div class="nav-brand">
+                <h1>🎲 Dice Game</h1>
+            </div>
+            <div class="nav-menu" id="navMenu">
+                <div class="wallet-info" id="walletInfo" style="display: none;">
+                    <span class="balance">Balance: $<span id="balance">0.00</span></span>
+                    <button class="btn btn-small btn-danger" onclick="logout()">Logout</button>
+                </div>
+                <div class="auth-buttons" id="authButtons">
+                    <button class="btn btn-small" onclick="showLoginModal()">Login</button>
+                    <button class="btn btn-small btn-primary" onclick="showRegisterModal()">Register</button>
+                    <button class="btn btn-small btn-secondary" onclick="watchMode()">Watch Mode</button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Game Area -->
+        <div class="game-container">
+            <div class="game-board">
+                <h2>Guess: Odd or Even?</h2>
+                
+                <!-- Dice Display -->
+                <div class="dice-container">
+                    <div class="dice" id="dice">
+                        <div class="dice-face">?</div>
+                    </div>
+                </div>
+
+                <!-- Game Controls -->
+                <div class="game-controls" id="gameControls">
+                    <div class="bet-section">
+                        <label for="betAmount">Bet Amount:</label>
+                        <input type="number" id="betAmount" min="1" step="1" value="10" placeholder="Enter bet amount">
+                    </div>
+
+                    <div class="prediction-buttons">
+                        <button class="btn btn-large btn-odd" onclick="playGame('odd')">
+                            <span>ODD</span>
+                            <small>Win 2x</small>
+                        </button>
+                        <button class="btn btn-large btn-even" onclick="playGame('even')">
+                            <span>EVEN</span>
+                            <small>Win 2x</small>
+                        </button>
+                    </div>
+
+                    <p class="game-info">Make a prediction and roll the dice!</p>
+                </div>
+
+                <!-- Watch Mode Controls -->
+                <div class="watch-controls" id="watchControls" style="display: none;">
+                    <button class="btn btn-large btn-primary" onclick="watchRoll()">
+                        <span>🎲 Roll Dice (Free)</span>
+                    </button>
+                    <p class="game-info">Watch mode active - Login to play for real money!</p>
+                </div>
+
+                <!-- Result Display -->
+                <div class="result-container" id="resultContainer" style="display: none;">
+                    <div class="result-message" id="resultMessage"></div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <!-- Stats -->
+                <div class="stats-card" id="statsCard" style="display: none;">
+                    <h3>Your Statistics</h3>
+                    <div class="stat-item">
+                        <span>Games Played:</span>
+                        <strong id="totalGames">0</strong>
+                    </div>
+                    <div class="stat-item">
+                        <span>Games Won:</span>
+                        <strong id="gamesWon">0</strong>
+                    </div>
+                    <div class="stat-item">
+                        <span>Win Rate:</span>
+                        <strong id="winRate">0%</strong>
+                    </div>
+                    <div class="stat-item">
+                        <span>Net Profit:</span>
+                        <strong id="netProfit">$0.00</strong>
+                    </div>
+                </div>
+
+                <!-- Game History -->
+                <div class="history-card" id="historyCard" style="display: none;">
+                    <h3>Recent Games</h3>
+                    <div class="history-list" id="historyList"></div>
+                </div>
+
+                <!-- Game Rules -->
+                <div class="rules-card">
+                    <h3>How to Play</h3>
+                    <ul>
+                        <li>🎲 Choose Odd or Even</li>
+                        <li>💰 Place your bet</li>
+                        <li>🎯 Win 2x your bet if correct</li>
+                        <li>⏰ Winnings unlock after 24 hours</li>
+                        <li>👀 Watch mode is free!</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <!-- Login Modal -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('loginModal')">&times;</span>
+            <h2>Login</h2>
+            <form onsubmit="login(event)">
+                <div class="form-group">
+                    <label>Email:</label>
+                    <input type="email" id="loginEmail" required>
+                </div>
+                <div class="form-group">
+                    <label>Password:</label>
+                    <input type="password" id="loginPassword" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Login</button>
+            </form>
+            <p class="modal-footer">Don't have an account? <a href="#" onclick="showRegisterModal()">Register</a></p>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div class="modal" id="registerModal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('registerModal')">&times;</span>
+            <h2>Register</h2>
+            <form onsubmit="register(event)">
+                <div class="form-group">
+                    <label>Username:</label>
+                    <input type="text" id="registerUsername" required minlength="3">
+                </div>
+                <div class="form-group">
+                    <label>Email:</label>
+                    <input type="email" id="registerEmail" required>
+                </div>
+                <div class="form-group">
+                    <label>Password:</label>
+                    <input type="password" id="registerPassword" required minlength="6">
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Register</button>
+            </form>
+            <p class="modal-footer">Already have an account? <a href="#" onclick="showLoginModal()">Login</a></p>
+        </div>
+    </div>
+
+
+
+
+
+    <!-- QR Payment Method Selection Modal -->
+    <!-- REMOVED -->
+
+    <script src="app.js"></script>
+</body>
+</html>

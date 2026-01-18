@@ -1,0 +1,656 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary-color: #4CAF50;
+    --secondary-color: #2196F3;
+    --danger-color: #f44336;
+    --warning-color: #ff9800;
+    --dark-bg: #1a1a2e;
+    --card-bg: #16213e;
+    --text-light: #ffffff;
+    --text-muted: #aaaaaa;
+    --odd-color: #e74c3c;
+    --even-color: #3498db;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    color: var(--text-light);
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Navigation */
+.navbar {
+    background: var(--dark-bg);
+    padding: 15px 30px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.nav-brand h1 {
+    font-size: 24px;
+    color: var(--primary-color);
+}
+
+.nav-menu {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.wallet-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.balance {
+    background: var(--card-bg);
+    padding: 8px 15px;
+    border-radius: 5px;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+/* Buttons */
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: var(--primary-color);
+    color: white;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.btn-small {
+    padding: 8px 15px;
+    font-size: 13px;
+}
+
+.btn-large {
+    padding: 20px 40px;
+    font-size: 18px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.btn-primary {
+    background: var(--primary-color);
+}
+
+.btn-secondary {
+    background: var(--secondary-color);
+}
+
+.btn-danger {
+    background: var(--danger-color);
+}
+
+.btn-odd {
+    background: var(--odd-color);
+    flex: 1;
+}
+
+.btn-even {
+    background: var(--even-color);
+    flex: 1;
+}
+
+.btn-block {
+    width: 100%;
+}
+
+/* Game Container */
+.game-container {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 30px;
+}
+
+/* Game Board */
+.game-board {
+    background: var(--dark-bg);
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}
+
+.game-board h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 28px;
+    color: var(--primary-color);
+}
+
+/* Dice */
+.dice-container {
+    display: flex;
+    justify-content: center;
+    margin: 40px 0;
+}
+
+.dice {
+    width: 120px;
+    height: 120px;
+    background: white;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+    transition: transform 0.6s ease;
+}
+
+.dice.rolling {
+    animation: roll 0.6s ease-in-out;
+}
+
+@keyframes roll {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(90deg); }
+    50% { transform: rotate(180deg); }
+    75% { transform: rotate(270deg); }
+}
+
+.dice-face {
+    font-size: 64px;
+    font-weight: bold;
+    color: var(--dark-bg);
+}
+
+/* Game Controls */
+.game-controls, .watch-controls {
+    margin-top: 30px;
+}
+
+.bet-section {
+    margin-bottom: 20px;
+}
+
+.bet-section label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+.bet-section input {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    border: 2px solid var(--card-bg);
+    border-radius: 5px;
+    background: var(--card-bg);
+    color: var(--text-light);
+}
+
+.prediction-buttons {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.game-info {
+    text-align: center;
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+/* Result */
+.result-container {
+    margin-top: 30px;
+    padding: 20px;
+    background: var(--card-bg);
+    border-radius: 10px;
+    text-align: center;
+}
+
+.result-message {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.result-message.win {
+    color: var(--primary-color);
+}
+
+.result-message.lose {
+    color: var(--danger-color);
+}
+
+/* Sidebar */
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.stats-card, .history-card, .rules-card {
+    background: var(--dark-bg);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.stats-card h3, .history-card h3, .rules-card h3 {
+    margin-bottom: 15px;
+    color: var(--primary-color);
+    border-bottom: 2px solid var(--card-bg);
+    padding-bottom: 10px;
+}
+
+.stat-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--card-bg);
+}
+
+.stat-item:last-child {
+    border-bottom: none;
+}
+
+.history-list {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.history-item {
+    padding: 10px;
+    margin-bottom: 10px;
+    background: var(--card-bg);
+    border-radius: 5px;
+    font-size: 13px;
+}
+
+.history-item.win {
+    border-left: 4px solid var(--primary-color);
+}
+
+.history-item.lose {
+    border-left: 4px solid var(--danger-color);
+}
+
+.rules-card ul {
+    list-style: none;
+    padding: 0;
+}
+
+.rules-card li {
+    padding: 10px 0;
+    border-bottom: 1px solid var(--card-bg);
+}
+
+.rules-card li:last-child {
+    border-bottom: none;
+}
+
+/* Modals */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.modal-content {
+    background: var(--dark-bg);
+    margin: 5% auto;
+    padding: 30px;
+    border-radius: 15px;
+    width: 90%;
+    max-width: 500px;
+    position: relative;
+    animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+    from { 
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+    to { 
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.close {
+    color: var(--text-muted);
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.close:hover {
+    color: var(--text-light);
+}
+
+.modal-content h2 {
+    margin-bottom: 20px;
+    color: var(--primary-color);
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    border: 2px solid var(--card-bg);
+    border-radius: 5px;
+    background: var(--card-bg);
+    color: var(--text-light);
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+.modal-footer {
+    margin-top: 20px;
+    text-align: center;
+    color: var(--text-muted);
+}
+
+.modal-footer a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.modal-footer a:hover {
+    text-decoration: underline;
+}
+
+.payment-info {
+    background: var(--card-bg);
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    color: var(--text-muted);
+}
+
+.payment-info p {
+    margin: 5px 0;
+}
+
+#payment-element {
+    margin-bottom: 20px;
+}
+
+#payment-message {
+    color: #f44336;
+    margin-bottom: 15px;
+}
+
+/* QR Payment Styles */
+.qr-methods-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 15px 0;
+}
+
+.qr-method-option {
+    cursor: pointer;
+}
+
+.qr-method-option input[type="radio"] {
+    display: none;
+}
+
+.method-card {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+    background: var(--card-bg);
+    border: 2px solid var(--card-bg);
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.qr-method-option input[type="radio"]:checked + .method-card {
+    border-color: var(--primary-color);
+    background: rgba(76, 175, 80, 0.1);
+}
+
+.method-card:hover {
+    border-color: var(--primary-color);
+    transform: translateX(5px);
+}
+
+.method-icon {
+    font-size: 32px;
+}
+
+.method-info {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.method-info strong {
+    font-size: 16px;
+    color: var(--text-light);
+}
+
+.method-info small {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.qr-modal-large .modal-content {
+    max-width: 900px;
+}
+
+.qr-payment-container {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 30px;
+    margin-top: 20px;
+}
+
+.qr-code-display {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.qr-code-display img {
+    border: 3px solid var(--primary-color);
+    border-radius: 10px;
+    padding: 10px;
+    background: white;
+}
+
+.qr-timer {
+    background: var(--card-bg);
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.qr-payment-details {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.payment-info-box {
+    background: var(--card-bg);
+    padding: 15px;
+    border-radius: 8px;
+}
+
+.payment-info-box h3 {
+    margin-bottom: 10px;
+    color: var(--primary-color);
+    font-size: 16px;
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.detail-row:last-child {
+    border-bottom: none;
+}
+
+.qr-instructions {
+    background: var(--card-bg);
+    padding: 15px;
+    border-radius: 8px;
+}
+
+.qr-instructions h4 {
+    margin-bottom: 10px;
+    color: var(--primary-color);
+}
+
+.qr-instructions ol {
+    margin-left: 20px;
+}
+
+.qr-instructions li {
+    margin: 8px 0;
+    font-size: 14px;
+}
+
+.qr-wallet-address label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    font-size: 13px;
+}
+
+.copy-field {
+    display: flex;
+    gap: 10px;
+}
+
+.copy-field input {
+    flex: 1;
+    padding: 8px;
+    background: var(--card-bg);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 5px;
+    color: var(--text-light);
+    font-size: 12px;
+}
+
+.qr-transaction-hash label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 13px;
+}
+
+.qr-transaction-hash input {
+    width: 100%;
+    padding: 10px;
+    background: var(--card-bg);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 5px;
+    color: var(--text-light);
+    font-size: 13px;
+}
+
+.qr-status {
+    padding: 10px;
+    border-radius: 5px;
+    background: var(--card-bg);
+}
+
+/* Responsive */
+@media (max-width: 968px) {
+    .game-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .navbar {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .prediction-buttons {
+        flex-direction: column;
+    }
+    
+    .qr-payment-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .wallet-info {
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--card-bg);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #45a049;
+}
