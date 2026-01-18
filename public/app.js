@@ -1,5 +1,5 @@
-// API URL
-const API_URL = 'http://localhost:5000/api';
+// API URL - Works both locally and on Railway
+const API_URL = `${window.location.origin}/api`;
 
 // State
 let token = localStorage.getItem('token');
