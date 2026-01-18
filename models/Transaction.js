@@ -1,37 +1,54 @@
-const mongoose = require('mongoose');
+const { DataTypes } = require('sequelize');
+const { sequelize } = require('../config/database');
+const User = require('./User');
 
-const transactionSchema = new mongoose.Schema({
+const Transaction = sequelize.define('Transaction', {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
+  },
   userId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: User,
+      key: 'id'
+    }
   },
   type: {
-    type: String,
-    enum: ['deposit', 'withdrawal', 'bet', 'win'],
-    required: true
+    type: DataTypes.STRING,
+    allowNull: false,
+    validate: {
+      isIn: [['deposit', 'withdrawal', 'win', 'loss', 'bet']]
+    }
   },
   amount: {
-    type: Number,
-    required: true
+    type: DataTypes.FLOAT,
+    allowNull: false
   },
   status: {
-    type: String,
-    enum: ['pending', 'completed', 'failed'],
-    default: 'completed'
+    type: DataTypes.STRING,
+    defaultValue: 'completed',
+    validate: {
+      isIn: [['pending', 'completed', 'failed']]
+    }
   },
   unlockDate: {
-    type: Date,
-    default: null
+    type: DataTypes.DATE,
+    allowNull: true
   },
   description: {
-    type: String,
-    default: ''
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now
+    type: DataTypes.STRING,
+    allowNull: true
   }
+}, {
+  tableName: 'transactions',
+  timestamps: true
 });
 
-module.exports = mongoose.model('Transaction', transactionSchema);
+// Define associations
+Transaction.belongsTo(User, { foreignKey: 'userId' });
+User.hasMany(Transaction, { foreignKey: 'userId' });
+
+module.exports = Transaction;

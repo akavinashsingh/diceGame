@@ -13,7 +13,7 @@ const auth = async (req, res, next) => {
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET || 'default_secret');
-    const user = await User.findById(decoded.userId);
+    const user = await User.findByPk(decoded.userId);
 
     if (!user) {
       return res.status(401).json({ 
@@ -23,7 +23,7 @@ const auth = async (req, res, next) => {
     }
 
     req.user = user;
-    req.userId = user._id;
+    req.userId = user.id;
     next();
   } catch (error) {
     res.status(401).json({ 

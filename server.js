@@ -1,8 +1,8 @@
 const express = require('express');
-const mongoose = require('mongoose');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const path = require('path');
+const { sequelize, testConnection } = require('./config/database');
 
 // Load environment variables
 dotenv.config();
@@ -22,13 +22,19 @@ app.use(express.urlencoded({ extended: true }));
 // Serve static files
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Database connection
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/dice-game', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
-.then(() => console.log('MongoDB connected successfully'))
-.catch(err => console.error('MongoDB connection error:', err));
+// Database connection and sync
+const initializeDatabase = async () => {
+  try {
+    await testConnection();
+    // Sync all models (create tables if they don't exist)
+    await sequelize.sync({ alter: false });
+    console.log('Database tables synchronized');
+  } catch (error) {
+    console.error('Database initialization error:', error);
+  }
+};
+
+initializeDatabase();
 
 // Routes
 app.use('/api/auth', authRoutes);

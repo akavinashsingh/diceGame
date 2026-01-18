@@ -25,7 +25,11 @@ router.post('/register', [
     const { username, email, password } = req.body;
 
     // Check if user exists
-    const existingUser = await User.findOne({ $or: [{ email }, { username }] });
+    const existingUser = await User.findOne({ 
+      where: { 
+        [require('sequelize').Op.or]: [{ email }, { username }] 
+      } 
+    });
     if (existingUser) {
       return res.status(400).json({ 
         success: false, 
@@ -37,18 +41,16 @@ router.post('/register', [
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Create user
-    const user = new User({
+    const user = await User.create({
       username,
       email,
       password: hashedPassword,
       walletBalance: 1000 // Starting bonus
     });
 
-    await user.save();
-
     // Create token
     const token = jwt.sign(
-      { userId: user._id },
+      { userId: user.id },
       process.env.JWT_SECRET || 'default_secret',
       { expiresIn: '7d' }
     );
@@ -58,7 +60,7 @@ router.post('/register', [
       message: 'Registration successful! You received $1000 bonus',
       token,
       user: {
-        id: user._id,
+        id: user.id,
         username: user.username,
         email: user.email,
         walletBalance: user.walletBalance
@@ -90,7 +92,7 @@ router.post('/login', [
     const { email, password } = req.body;
 
     // Find user
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ where: { email } });
     if (!user) {
       return res.status(401).json({ 
         success: false, 
@@ -109,7 +111,7 @@ router.post('/login', [
 
     // Create token
     const token = jwt.sign(
-      { userId: user._id },
+      { userId: user.id },
       process.env.JWT_SECRET || 'default_secret',
       { expiresIn: '7d' }
     );
@@ -119,7 +121,7 @@ router.post('/login', [
       message: 'Login successful',
       token,
       user: {
-        id: user._id,
+        id: user.id,
         username: user.username,
         email: user.email,
         walletBalance: user.walletBalance,
@@ -141,7 +143,7 @@ router.get('/me', auth, async (req, res) => {
     res.json({
       success: true,
       user: {
-        id: req.user._id,
+        id: req.user.id,
         username: req.user.username,
         email: req.user.email,
         walletBalance: req.user.walletBalance,

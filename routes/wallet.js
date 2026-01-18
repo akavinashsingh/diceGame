@@ -9,7 +9,7 @@ const router = express.Router();
 // Get wallet balance
 router.get('/balance', auth, async (req, res) => {
   try {
-    const user = await User.findById(req.userId);
+    const user = await User.findByPk(req.userId);
     
     res.json({
       success: true,
@@ -29,14 +29,16 @@ router.get('/balance', auth, async (req, res) => {
 // Get transaction history
 router.get('/transactions', auth, async (req, res) => {
   try {
-    const transactions = await Transaction.find({ userId: req.userId })
-      .sort({ createdAt: -1 })
-      .limit(50);
+    const transactions = await Transaction.findAll({
+      where: { userId: req.userId },
+      order: [['createdAt', 'DESC']],
+      limit: 50
+    });
 
     res.json({
       success: true,
       transactions: transactions.map(tx => ({
-        id: tx._id,
+        id: tx.id,
         type: tx.type,
         amount: tx.amount,
         status: tx.status,
@@ -56,16 +58,19 @@ router.get('/transactions', auth, async (req, res) => {
 // Check locked balance
 router.get('/locked-balance', auth, async (req, res) => {
   try {
+    const { Op } = require('sequelize');
     const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
-    const recentWinnings = await Transaction.find({
-      userId: req.userId,
-      type: 'win',
-      createdAt: { $gt: twentyFourHoursAgo },
-      unlockDate: { $gt: new Date() }
+    const recentWinnings = await Transaction.findAll({
+      where: {
+        userId: req.userId,
+        type: 'win',
+        createdAt: { [Op.gt]: twentyFourHoursAgo },
+        unlockDate: { [Op.gt]: new Date() }
+      }
     });
 
     const lockedAmount = recentWinnings.reduce((sum, tx) => sum + tx.amount, 0);
-    const user = await User.findById(req.userId);
+    const user = await User.findByPk(req.userId);
 
     res.json({
       success: true,

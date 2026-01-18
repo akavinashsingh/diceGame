@@ -23,7 +23,7 @@ router.post('/play', [
     }
 
     const { betAmount, prediction } = req.body;
-    const user = await User.findById(req.userId);
+    const user = await User.findByPk(req.userId);
 
     // Check if user has sufficient balance
     if (user.walletBalance < betAmount) {
@@ -38,14 +38,13 @@ router.post('/play', [
     await user.save();
 
     // Record bet transaction
-    const betTransaction = new Transaction({
-      userId: user._id,
+    await Transaction.create({
+      userId: user.id,
       type: 'bet',
       amount: parseFloat(betAmount),
       status: 'completed',
       description: `Bet on ${prediction}`
     });
-    await betTransaction.save();
 
     // Roll the dice
     const diceRoll = Math.floor(Math.random() * 6) + 1;
@@ -60,20 +59,19 @@ router.post('/play', [
 
       // Record win transaction with unlock date
       const unlockDate = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours from now
-      const winTransaction = new Transaction({
-        userId: user._id,
+      await Transaction.create({
+        userId: user.id,
         type: 'win',
         amount: winAmount,
         status: 'completed',
         unlockDate,
         description: `Won on ${prediction} (dice: ${diceRoll})`
       });
-      await winTransaction.save();
     }
 
     // Save game history
-    const gameHistory = new GameHistory({
-      userId: user._id,
+    await GameHistory.create({
+      userId: user.id,
       betAmount: parseFloat(betAmount),
       prediction,
       diceRoll,
@@ -81,7 +79,6 @@ router.post('/play', [
       won,
       winAmount
     });
-    await gameHistory.save();
 
     res.json({
       success: true,
@@ -129,14 +126,16 @@ router.post('/watch', async (req, res) => {
 // Get game history
 router.get('/history', auth, async (req, res) => {
   try {
-    const history = await GameHistory.find({ userId: req.userId })
-      .sort({ createdAt: -1 })
-      .limit(50);
+    const history = await GameHistory.findAll({
+      where: { userId: req.userId },
+      order: [['createdAt', 'DESC']],
+      limit: 50
+    });
 
     res.json({
       success: true,
       history: history.map(game => ({
-        id: game._id,
+        id: game.id,
         betAmount: game.betAmount,
         prediction: game.prediction,
         diceRoll: game.diceRoll,
@@ -157,7 +156,9 @@ router.get('/history', auth, async (req, res) => {
 // Get game statistics
 router.get('/stats', auth, async (req, res) => {
   try {
-    const allGames = await GameHistory.find({ userId: req.userId });
+    const allGames = await GameHistory.findAll({ 
+      where: { userId: req.userId } 
+    });
     
     const totalGames = allGames.length;
     const gamesWon = allGames.filter(g => g.won).length;

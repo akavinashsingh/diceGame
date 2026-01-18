@@ -1,43 +1,62 @@
-const mongoose = require('mongoose');
+const { DataTypes } = require('sequelize');
+const { sequelize } = require('../config/database');
+const User = require('./User');
 
-const gameHistorySchema = new mongoose.Schema({
+const GameHistory = sequelize.define('GameHistory', {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
+  },
   userId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: User,
+      key: 'id'
+    }
   },
   betAmount: {
-    type: Number,
-    required: true
+    type: DataTypes.FLOAT,
+    allowNull: false
   },
   prediction: {
-    type: String,
-    enum: ['odd', 'even'],
-    required: true
+    type: DataTypes.STRING,
+    allowNull: false,
+    validate: {
+      isIn: [['odd', 'even']]
+    }
   },
   diceRoll: {
-    type: Number,
-    required: true,
-    min: 1,
-    max: 6
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    validate: {
+      min: 1,
+      max: 6
+    }
   },
   result: {
-    type: String,
-    enum: ['odd', 'even'],
-    required: true
+    type: DataTypes.STRING,
+    allowNull: false,
+    validate: {
+      isIn: [['odd', 'even']]
+    }
   },
   won: {
-    type: Boolean,
-    required: true
+    type: DataTypes.BOOLEAN,
+    allowNull: false
   },
   winAmount: {
-    type: Number,
-    default: 0
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now
+    type: DataTypes.FLOAT,
+    defaultValue: 0
   }
+}, {
+  tableName: 'game_histories',
+  timestamps: true
 });
 
-module.exports = mongoose.model('GameHistory', gameHistorySchema);
+// Define associations
+GameHistory.belongsTo(User, { foreignKey: 'userId' });
+User.hasMany(GameHistory, { foreignKey: 'userId' });
+
+module.exports = GameHistory;
