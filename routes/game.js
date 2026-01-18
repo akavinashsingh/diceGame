@@ -21,7 +21,7 @@ router.post('/play', [
         message: errors.array()[0].msg 
       });
     }
-
+         
     const { betAmount, prediction } = req.body;
     const user = await User.findByPk(req.userId);
 
